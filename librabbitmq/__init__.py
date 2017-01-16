@@ -186,7 +186,7 @@ class Connection(_librabbitmq.Connection):
     def __init__(self, host='localhost', userid='guest', password='guest',
                  virtual_host='/', port=5672, channel_max=0xffff,
                  frame_max=131072, heartbeat=0, lazy=False,
-                 client_properties=None, **kwargs):
+                 client_properties=None, connect_timeout=30.0, **kwargs):
         if ':' in host:
             host, port = host.split(':')
         super(Connection, self).__init__(
@@ -194,6 +194,7 @@ class Connection(_librabbitmq.Connection):
             virtual_host=virtual_host, channel_max=channel_max,
             frame_max=frame_max, heartbeat=heartbeat,
             client_properties=client_properties,
+            connect_timeout=float(connect_timeout),
         )
         self.channels = {}
         self._avail_channel_ids = array('H', xrange(self.channel_max, 0, -1))

@@ -132,6 +132,9 @@ typedef struct {
     char *userid;
     char *password;
     char *virtual_host;
+
+    float connect_timeout;
+
     int port;
     int frame_max;
     int channel_max;

@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import with_statement
 
 import socket
+import time
 import unittest2 as unittest
 
 from librabbitmq import Message, Connection, ConnectionError, ChannelError
@@ -121,6 +122,22 @@ class test_Channel(unittest.TestCase):
                 self.connection.close()
             except ConnectionError:
                 pass
+
+
+class test_Connection(unittest.TestCase):
+
+    def test_connect_timeout(self):
+        unreachable_host = '10.255.255.250:5672'
+        connect_timeout = 1.0
+        start_time = time.time()
+
+        with self.assertRaises(ConnectionError):
+            Connection(host=unreachable_host, userid='guest', password='guest',
+                       virtual_host='/', connect_timeout=connect_timeout)
+
+        duration = (time.time() - start_time)
+        self.assertGreaterEqual(duration, connect_timeout)
+        self.assertLess(duration, connect_timeout * 2)
 
 
 class test_Delete(unittest.TestCase):
